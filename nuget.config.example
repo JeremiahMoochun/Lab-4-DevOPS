@@ -3,6 +3,7 @@
   <packageSources>
     <clear />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-    <add key="AzureArtifacts" value="https://pkgs.dev.azure.com/ORG/PROJECT/_packaging/FEED/nuget/v3/index.json" />
+    <!-- Organization-scoped feed (Connect to feed → dotnet): -->
+    <add key="jmoochun" value="https://pkgs.dev.azure.com/jmoochun/_packaging/jmoochun/nuget/v3/index.json" />
   </packageSources>
 </configuration>

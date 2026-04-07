@@ -42,4 +42,5 @@ steps:
     command: push
     packagesToPush: "$(Build.ArtifactStagingDirectory)/*.nupkg"
     nuGetFeedType: internal
-    publishVstsFeed: YOUR_AZURE_DEVOPS_PROJECT/YOUR_FEED_NAME
+    # Organization-scoped feed: use feed name only (not Project/Feed).
+    publishVstsFeed: jmoochun

@@ -1,0 +1,9 @@
+# Local-only docs and machine-specific files
+README.md
+INSTRUCTIONS.md
+nuget.config
+
+bin/
+obj/
+.vs/
+*.user

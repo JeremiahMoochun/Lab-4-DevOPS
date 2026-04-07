@@ -1,0 +1,45 @@
+trigger:
+- main
+
+pool:
+  name: Default
+
+variables:
+  buildConfiguration: Release
+
+steps:
+- task: UseDotNet@2
+  displayName: Use .NET SDK 8.x
+  inputs:
+    packageType: sdk
+    version: 8.x
+
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: DevOpsLab4.sln
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: build
+    projects: DevOpsLab4.sln
+    arguments: --configuration $(buildConfiguration) --no-restore
+
+- task: DotNetCoreCLI@2
+  displayName: Pack class library
+  inputs:
+    command: pack
+    packagesToPack: src/DevOpsLab4.StringExtensions/DevOpsLab4.StringExtensions.csproj
+    nobuild: true
+    versioningScheme: byBuildNumber
+    arguments: --configuration $(buildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory)
+
+- task: DotNetCoreCLI@2
+  displayName: Push package to Azure Artifacts
+  inputs:
+    command: push
+    packagesToPush: "$(Build.ArtifactStagingDirectory)/*.nupkg"
+    nuGetFeedType: internal
+    publishVstsFeed: YOUR_AZURE_DEVOPS_PROJECT/YOUR_FEED_NAME

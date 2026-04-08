@@ -36,6 +36,10 @@ steps:
     # Use Version from the .csproj (1.0.0). byBuildNumber often breaks NuGet semver on CI.
     arguments: --configuration $(buildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory)
 
+# Required so dotnet/nuget can authenticate to pkgs.dev.azure.com (especially on self-hosted agents).
+- task: NuGetAuthenticate@1
+  displayName: NuGet authenticate (Azure Artifacts)
+
 - task: DotNetCoreCLI@2
   displayName: Push package to Azure Artifacts
   inputs:

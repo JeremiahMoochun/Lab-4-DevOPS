@@ -40,11 +40,14 @@ steps:
 - task: NuGetAuthenticate@1
   displayName: NuGet authenticate (Azure Artifacts)
 
+# If push fails with 403 Forbidden ("feed contributor or higher"): Azure DevOps → Artifacts → this feed →
+# Feed settings → Permissions → add "<ProjectName> Build Service (<org>)" (and/or Project Collection Build Service)
+# as Contributor. Pipeline identity is not your GitHub user or Windows login.
 - task: DotNetCoreCLI@2
   displayName: Push package to Azure Artifacts
   inputs:
     command: push
     packagesToPush: "$(Build.ArtifactStagingDirectory)/*.nupkg"
     nuGetFeedType: internal
-    # Organization-scoped feed: use feed name only (not Project/Feed).
+    # Organization-scoped feed: use feed name only (not Project/Feed). Must match your Artifacts feed name.
     publishVstsFeed: jmoochun

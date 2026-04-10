@@ -49,5 +49,5 @@ steps:
     command: push
     packagesToPush: "$(Build.ArtifactStagingDirectory)/*.nupkg"
     nuGetFeedType: internal
-    # Organization-scoped feed: use feed name only (not Project/Feed). Must match your Artifacts feed name.
-    publishVstsFeed: jmoochun
+    # Project-scoped feed: "ProjectName/feedName" (must match Azure DevOps project name exactly).
+    publishVstsFeed: 'DevOPS Lab 4/jmoochun'

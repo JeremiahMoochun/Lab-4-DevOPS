@@ -1,53 +1,47 @@
-trigger:
-- main
-
-pool:
-  name: Default
-
-variables:
-  buildConfiguration: Release
-
-steps:
-- task: UseDotNet@2
-  displayName: Use .NET SDK 8.x
-  inputs:
-    packageType: sdk
-    version: 8.x
-
-- task: DotNetCoreCLI@2
-  displayName: Restore
-  inputs:
-    command: restore
-    projects: DevOpsLab4.sln
-
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: build
-    projects: DevOpsLab4.sln
-    arguments: --configuration $(buildConfiguration) --no-restore
-
-- task: DotNetCoreCLI@2
-  displayName: Pack class library
-  inputs:
-    command: pack
-    packagesToPack: src/DevOpsLab4.StringExtensions/DevOpsLab4.StringExtensions.csproj
-    nobuild: true
-    # Use Version from the .csproj (1.0.0). byBuildNumber often breaks NuGet semver on CI.
-    arguments: --configuration $(buildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory)
-
-# Required so dotnet/nuget can authenticate to pkgs.dev.azure.com (especially on self-hosted agents).
-- task: NuGetAuthenticate@1
-  displayName: NuGet authenticate (Azure Artifacts)
-
-# If push fails with 403 Forbidden ("feed contributor or higher"): Azure DevOps → Artifacts → this feed →
-# Feed settings → Permissions → add "<ProjectName> Build Service (<org>)" (and/or Project Collection Build Service)
-# as Contributor. Pipeline identity is not your GitHub user or Windows login.
-- task: DotNetCoreCLI@2
-  displayName: Push package to Azure Artifacts
-  inputs:
-    command: push
-    packagesToPush: "$(Build.ArtifactStagingDirectory)/*.nupkg"
-    nuGetFeedType: internal
-    # Organization-scoped feed: feed name only (URL is .../jmoochun/_packaging/jmoochun/... with NO project in path).
-    publishVstsFeed: jmoochun
+trigger:
+- main
+
+pool:
+  name: Default
+
+variables:
+  buildConfiguration: Release
+
+steps:
+- task: UseDotNet@2
+  displayName: Use .NET SDK 8.x
+  inputs:
+    packageType: sdk
+    version: 8.x
+
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: restore
+    projects: DevOpsLab4.sln
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: build
+    projects: DevOpsLab4.sln
+    arguments: --configuration $(buildConfiguration) --no-restore
+
+- task: DotNetCoreCLI@2
+  displayName: Pack class library
+  inputs:
+    command: pack
+    packagesToPack: src/DevOpsLab4.StringExtensions/DevOpsLab4.StringExtensions.csproj
+    nobuild: true
+    arguments: --configuration $(buildConfiguration) --no-restore --output $(Build.ArtifactStagingDirectory)
+
+- task: NuGetAuthenticate@1
+  displayName: NuGet authenticate (Azure Artifacts)
+
+- task: DotNetCoreCLI@2
+  displayName: Push package to Azure Artifacts
+  inputs:
+    command: push
+    packagesToPush: "$(Build.ArtifactStagingDirectory)/*.nupkg"
+    nuGetFeedType: internal
+    publishVstsFeed: jmoochun

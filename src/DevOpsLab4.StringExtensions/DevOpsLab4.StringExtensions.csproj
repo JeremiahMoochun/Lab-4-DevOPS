@@ -7,7 +7,7 @@
     <PackageId>DevOpsLab4.StringExtensions</PackageId>
     <Version>1.0.0</Version>
     <Authors>Jeremiah Moochun</Authors>
-    <Description>String extension helpers for Lab 4.</Description>
+    <Description>String extension helpers.</Description>
   </PropertyGroup>
 
 </Project>
